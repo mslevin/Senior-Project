@@ -60,7 +60,14 @@
                         <a href="#services">Contact</a>
                     </li>
                     <li>
-                        <a href="#contact">Login</a>
+                       {# this should check if the user is logged in #}
+                       {% if False %}
+                        {# if logged in, link is to their account page #}
+                        <a href="#profile">Account</a>
+                        {% else %}
+                        {# otherwise, take them to a login screen #}
+                        <a href="#login">Login</a>
+                        {% endif %}
                     </li>
                 </ul>
             </div>
@@ -83,13 +90,13 @@
                         <hr class="intro-divider">
                         <ul class="list-inline intro-social-buttons">
                             <li>
-                                <a href="" class="btn btn-default btn-lg"><i class="fa fa-question fa-fw"></i> <span class="network-name">Survey</span></a>
+                                <a href="{% url 'survey' %}" class="btn btn-default btn-lg"><i class="fa fa-question fa-fw"></i> <span class="network-name">Survey</span></a>
                             </li>
                             <li>
-                                <a href="" class="btn btn-default btn-lg"><i class="fa fa-coffee fa-fw"></i> <span class="network-name">Taste</span></a>
+                                <a href="{% url 'recommend' %}" class="btn btn-default btn-lg"><i class="fa fa-bar-chart fa-fw"></i> <span class="network-name">Find</span></a>
                             </li>
                             <li>
-                                <a href="" class="btn btn-default btn-lg"><i class="fa fa-bar-chart fa-fw"></i> <span class="network-name">Learn</span></a>
+                                <a href="{% url 'taste' %}" class="btn btn-default btn-lg"><i class="fa fa-coffee fa-fw"></i> <span class="network-name">Taste</span></a>
                             </li>
                         </ul>
                     </div>
@@ -112,8 +119,9 @@
                 <div class="col-lg-5 col-sm-6">
                     <hr class="section-heading-spacer">
                     <div class="clearfix"></div>
-                    <h2 class="section-heading">Death to the Stock Photo:<br>Special Thanks</h2>
-                    <p class="lead">A special thanks to <a target="_blank" href="http://join.deathtothestockphoto.com/">Death to the Stock Photo</a> for providing the photographs that you see in this template. Visit their website to become a member.</p>
+                    <h2 class="section-heading">Take the Survey</h2>
+                    <p class="lead">Take our expertly designed flavor survey to build a taste profile.
+                    Doing this allows us to match you with your ideal coffee.</p>
                 </div>
                 <div class="col-lg-5 col-lg-offset-2 col-sm-6">
                     <img class="img-responsive" src="{% static 'coffee/img/ipad.png' %}" alt="">
@@ -134,8 +142,9 @@
                 <div class="col-lg-5 col-lg-offset-1 col-sm-push-6  col-sm-6">
                     <hr class="section-heading-spacer">
                     <div class="clearfix"></div>
-                    <h2 class="section-heading">3D Device Mockups<br>by PSDCovers</h2>
-                    <p class="lead">Turn your 2D designs into high quality, 3D product shots in seconds using free Photoshop actions by <a target="_blank" href="http://www.psdcovers.com/">PSDCovers</a>! Visit their website to download some of their awesome, free photoshop actions!</p>
+                    <h2 class="section-heading">Find a Coffee</h2>
+                    <p class="lead">We use advanced chemical analysis paired with cutting edge machine learning
+                    techniques to match you with your ideal coffee.</p>
                 </div>
                 <div class="col-lg-5 col-sm-pull-6  col-sm-6">
                     <img class="img-responsive" src="{% static 'coffee/img/dog.png' %}" alt="">
@@ -156,8 +165,8 @@
                 <div class="col-lg-5 col-sm-6">
                     <hr class="section-heading-spacer">
                     <div class="clearfix"></div>
-                    <h2 class="section-heading">Google Web Fonts and<br>Font Awesome Icons</h2>
-                    <p class="lead">This template features the 'Lato' font, part of the <a target="_blank" href="http://www.google.com/fonts">Google Web Font library</a>, as well as <a target="_blank" href="http://fontawesome.io">icons from Font Awesome</a>.</p>
+                    <h2 class="section-heading">Describe Your Cup</h2>
+                    <p class="lead">Use our interactive tasting tool to record exactly what you're tasting.</p>
                 </div>
                 <div class="col-lg-5 col-lg-offset-2 col-sm-6">
                     <img class="img-responsive" src="{% static 'coffee/img/phones.png' %}" alt="">
@@ -177,10 +186,10 @@
 
             <div class="row">
                 <div class="col-lg-6">
-                    <h2>Connect to Start Bootstrap:</h2>
+                    <h2>Find your perfect coffee.</h2>
                 </div>
                 <div class="col-lg-6">
-                    <ul class="list-inline banner-social-buttons">
+                    <!--<ul class="list-inline banner-social-buttons">
                         <li>
                             <a href="https://twitter.com/SBootstrap" class="btn btn-default btn-lg"><i class="fa fa-twitter fa-fw"></i> <span class="network-name">Twitter</span></a>
                         </li>
@@ -189,6 +198,18 @@
                         </li>
                         <li>
                             <a href="#" class="btn btn-default btn-lg"><i class="fa fa-linkedin fa-fw"></i> <span class="network-name">Linkedin</span></a>
+                        </li>
+                    </ul>-->
+
+                    <ul class="list-inline intro-social-buttons">
+                        <li>
+                           <a href="" class="btn btn-default btn-lg"><i class="fa fa-question fa-fw"></i> <span class="network-name">Survey</span></a>
+                        </li>
+                        <li>
+                           <a href="" class="btn btn-default btn-lg"><i class="fa fa-bar-chart fa-fw"></i> <span class="network-name">Find</span></a>
+                        </li>
+                        <li>
+                           <a href="" class="btn btn-default btn-lg"><i class="fa fa-coffee fa-fw"></i> <span class="network-name">Taste</span></a>
                         </li>
                     </ul>
                 </div>
