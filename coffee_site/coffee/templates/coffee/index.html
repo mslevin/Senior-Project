@@ -17,7 +17,7 @@
     <title>Brew Data - Home</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="{% static 'coffee/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- <link href="{% static 'coffee/css/bootstrap.min.css' %}" rel="stylesheet"> -->
 
     <!-- Custom CSS -->
     <link href="{% static 'coffee/css/landing-page.css' %}" rel="stylesheet">
@@ -54,10 +54,11 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="#about">About</a>
+                       <a href="#about">About</a>
                     </li>
                     <li>
-                        <a href="#services">Contact</a>
+                       <a href="#" data-toggle="modal" data-target=".bd-example-modal-sm">Contact</a>
+                        <!-- <a href="#services">Contact</a> -->
                     </li>
                     <li>
                        {# this should check if the user is logged in #}
@@ -76,6 +77,28 @@
         <!-- /.container -->
     </nav>
 
+    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+           <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Contact</h4>
+         </div>
+         <div class="modal-body">
+            <p>
+               Michael Slevin<br/>
+               <a href="mailto:mslevin@calpoly.edu">mslevin@calpoly.edu</a><br/>
+               <a href="http://www.michaelslevin.com">michaelslevin.com</a>
+            </p>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+         </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Header -->
     <a name="about"></a>
@@ -256,5 +279,3 @@
     <script src="{% static 'coffee/js/bootstrap.min.js' %}"></script>
 
 </body>
-
-</html>
