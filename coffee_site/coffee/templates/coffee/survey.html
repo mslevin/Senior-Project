@@ -13,10 +13,12 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Brew Data - Home</title>
+    <title>Brew Data - Survey</title>
 
     <!-- Bootstrap Core CSS -->
     <!-- <link href="{% static 'coffee/css/bootstrap.min.css' %}" rel="stylesheet"> -->
+
+    <style> body { padding-top: 30px; } </style>
 
     <!-- Custom CSS -->
     <link href="{% static 'coffee/css/landing-page.css' %}" rel="stylesheet">
@@ -98,6 +100,31 @@
         </div>
       </div>
     </div>
+
+    <!-- Page header -->
+    <div class="page-header">
+       <h1>Flavor and Tastes Survey<small> Develop your flavor profile</small></h1>
+    </div>
+    <!-- <div class="progress">
+       <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+          <span class="sr-only">20% Complete</span>
+       </div>
+    </div> -->
+
+    <!-- Question Section -->
+    <form action="{% url 'submit' %}" method="post">
+      {% csrf_token %}
+      {% for question in question_list %}
+         <h4>{{ question.question_text }} </h4>
+         <fieldset id="{{ question.id }}">
+         {% for choice in question.choice_set.all %}
+            <input type="radio" name="{{ question.id }}" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
+            <label for="choice{{ forloop.counter }}">{{ choice.choice_text }} </label><br />
+         {% endfor %}
+         </fieldset>
+      {% endfor %}
+      <input type="submit" value="Submit" />
+   </form>
 
     <!-- jQuery -->
     <script src="{% static 'coffee/js/jquery.js' %}"></script>

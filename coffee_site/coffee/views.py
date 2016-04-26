@@ -12,11 +12,18 @@ def login(request):
     return HttpResponse("User login and registration page.")
 
 def survey(request):
-    latest_question_list = Question.objects.order_by('-pub_date')
+    question_list = Question.objects.order_by('-pub_date')
     context = {
-            'latest_question_list': latest_question_list,
+            'question_list': question_list,
         }
     return render(request, 'coffee/survey.html', context)
+
+def submit(request):
+    output = request.POST
+    question_list = Question.objects.order_by('-pub_date')
+    for question in question_list:
+        print question.question_text, " : ", request.POST[str(question.id)]
+    return HttpResponse(output)
 
 def taste(request):
     return HttpResponse("This is where the coffee tasting will happen.")
