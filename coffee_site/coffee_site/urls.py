@@ -15,8 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.views import static
+from . import settings
 
 urlpatterns = [
     url(r'^coffee/', include('coffee.urls')),
     url(r'^admin/', admin.site.urls),
-]
+    url(r'^media/(?P<path>.*)', static.serve, {'document_root': settings.MEDIA_ROOT})
+    ]

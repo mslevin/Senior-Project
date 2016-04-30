@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Choice, Question, PrimaryFlavor, SecondaryFlavor, TertiaryFlavor, Chemical
+from .models import Choice, Question, PrimaryFlavor, SecondaryFlavor, TertiaryFlavor, Chemical, Roaster, Coffee
 
 class ChoiceInline(admin.TabularInline):
     model = Choice
@@ -16,8 +16,16 @@ class ChemicalInline(admin.TabularInline):
 class SecondaryFlavorAdmin(admin.ModelAdmin):
     inlines = [ChemicalInline]
 
+class RoasterAdmin(admin.ModelAdmin):
+    list_display = ('name', 'location')
+
+class CoffeeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'roaster', 'origin')
+
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Chemical)
 admin.site.register(PrimaryFlavor)
 admin.site.register(SecondaryFlavor)
 admin.site.register(TertiaryFlavor)
+admin.site.register(Roaster, RoasterAdmin)
+admin.site.register(Coffee, CoffeeAdmin)

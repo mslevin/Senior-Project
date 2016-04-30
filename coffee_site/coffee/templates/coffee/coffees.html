@@ -1,0 +1,101 @@
+{% extends "coffee/base.html" %}
+
+{% block content %}
+<style>
+.glyphicon { margin-right:5px; }
+.thumbnail
+{
+    margin-bottom: 20px;
+    padding: 0px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+}
+
+.item.list-group-item
+{
+    float: none;
+    width: 80%;
+    background-color: #fff;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+.item.list-group-item:nth-of-type(odd):hover,.item.list-group-item:hover
+{
+    background: #428bca;
+}
+
+.item.list-group-item .list-group-image
+{
+    margin-right: 10px;
+}
+.item.list-group-item .thumbnail
+{
+    margin-bottom: 0px;
+}
+.item.list-group-item .caption
+{
+    padding: 9px 9px 0px 9px;
+}
+.item.list-group-item:nth-of-type(odd)
+{
+    background: #eeeeee;
+}
+
+.item.list-group-item:before, .item.list-group-item:after
+{
+    display: table;
+    content: " ";
+}
+
+.item.list-group-item img
+{
+    float: left;
+}
+.item.list-group-item:after
+{
+    clear: both;
+}
+.list-group-item-text
+{
+    margin: 0 0 11px;
+}
+
+</style>
+
+ <!-- Page header -->
+ <div class="page-header">
+    <h1>Our Coffees<small> </small></h1>
+ </div>
+
+ <div id="products" class="row list-group">
+    {% csrf_token %}
+    {% if coffee_list %}
+    {% for coffee in coffee_list %}
+     <div class="item col-xs-4 col-lg-4 list-grou-item">
+         <div class="thumbnail">
+             <img class="group list-group-image" src="{{ coffee.roaster.image.url }}" alt="" width="180" height="100"/>
+             <div class="caption">
+                 <h4 class="group inner list-group-item-heading">{{ coffee.name }}</h4>
+                 <br />
+                 <p>
+                    Origin: {{ coffee.origin }}<br />
+                    {% if coffee.region %}
+                    Region: {{ coffee.region }}<br />
+                    {% endif %}
+                    Tasting Notes: {{ coffee.tasting_notes }}<br />
+                 <div class="row">
+                     <div class="col-xs-12 col-md-6">
+                         <a class="btn btn-success" href="{{ coffee.roaster.website }}">View Website</a>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+     {% endfor %}
+     {% else %}
+      <p>No coffees available.</p>
+     {% endif %}
+ </div>
+
+ {% endblock %}
