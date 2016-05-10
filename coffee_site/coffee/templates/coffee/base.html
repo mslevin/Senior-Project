@@ -1,4 +1,6 @@
 {% load staticfiles %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+
 {% load bootstrap3 %}
 {% bootstrap_css %}
 {% bootstrap_javascript %}
@@ -13,13 +15,12 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Brew Data - Survey</title>
+    <title>Brew Data</title>
 
     <!-- Bootstrap Core CSS -->
     <!-- <link href="{% static 'coffee/css/bootstrap.min.css' %}" rel="stylesheet"> -->
 
     <style> body { padding-top: 30px; } </style>
-
     <!-- Custom CSS -->
     <link href="{% static 'coffee/css/landing-page.css' %}" rel="stylesheet">
 
@@ -33,6 +34,12 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <style>
+      body {
+         padding-left: 25px;
+         padding-right: 25px;
+      }
+   </style>
 
 </head>
 
@@ -54,9 +61,9 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li>
+                    <!-- <li>
                        <a href="#about">About</a>
-                    </li>
+                    </li> -->
                     <li>
                        <a href="{% url 'coffees' %}">Coffees</a>
                     <li>

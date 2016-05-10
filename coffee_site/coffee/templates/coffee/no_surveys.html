@@ -1,0 +1,15 @@
+{% extends "coffee/base.html" %}
+
+{% block content %}
+<div class="page-header">
+   <h1>You haven't taken the survey!<small></small></h1>
+</div>
+
+<p>You have to take the survey to receive a coffee recommendation.</p>
+<a href="{% url 'survey' %}" class="btn btn-primary btn-lg" role="button">Take the survey</a>
+<br/><br/>
+<p>Or, you can view all the coffees that we've tested.</p>
+<a href="{% url 'coffees' %}" class="btn btn-info btn-lg" role="button">View Coffees</a>
+
+
+{% endblock %}

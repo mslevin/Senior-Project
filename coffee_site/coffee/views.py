@@ -3,8 +3,11 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import View
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
+import datetime
+import os
+import json
 
-from .models import Question, Coffee
+from .models import Question, Choice, Coffee, SurveyResult, Answer
 from .forms import NameForm
 
 def index(request):
@@ -46,17 +49,38 @@ def survey(request):
     return render(request, 'coffee/survey.html', context)
 
 def submit(request):
-    output = request.POST
     question_list = Question.objects.order_by('-pub_date')
+    print request.user.username
+    result = SurveyResult(user=request.user, completed=datetime.datetime.now())
+    result.save()
+    answer = Answer(result=result, question=question_list[0], answer=Choice.objects.get(pk=request.POST[str(1)]))
+    print answer
     for question in question_list:
-        print question.question_text, " : ", request.POST[str(question.id)]
-    return HttpResponse(output)
+        answer = Answer(result=result, question=question, answer=Choice.objects.get(pk=request.POST[str(question.id)]))
+        answer.save()
+        ans = Choice.objects.get(pk=request.POST[str(question.id)])
+        print question.question_text, " : ", ans
+    return HttpResponseRedirect(reverse('recommend'))
 
 def taste(request):
     return HttpResponse("This is where the coffee tasting will happen.")
 
 def recommend(request):
-    return HttpResponse("This is where you will get your coffee recommendations.")
+    all_surveys = SurveyResult.objects.filter(user=request.user).order_by('-completed')
+    if (len(all_surveys) > 0):
+        survey = all_surveys[0]
+        answers = survey.answer_set.all()
+        modifiers = []
+        for ans in answers:
+            for mod in ans.answer.description.split(', '):
+                modifiers.append(mod)
+        context = {
+            "survey": survey,
+            "modifiers": ",".join(modifiers)
+        }
+        return render(request, 'coffee/recommend.html', context)
+    else:
+        return render(request, 'coffee/no_surveys.html')
 
 def coffees(request):
     coffee_list = Coffee.objects.all()

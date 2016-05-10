@@ -1,21 +1,38 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.conf import settings
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')
     id = models.AutoField(primary_key=True)
+    description = models.CharField(max_length=300, blank=True, null=True)
     def __str__(self):
         return self.question_text
 
-
 class Choice(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question)
     choice_text = models.CharField(max_length=200)
     id = models.AutoField(primary_key=True)
+    description = models.CharField(max_length=300, blank=True, null=True)
     def __str__(self):
         return self.choice_text
+
+class SurveyResult(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    completed = models.DateTimeField('Completed')
+    id = models.AutoField(primary_key=True)
+    def __str__(self):
+        return str(self.user) + " " + str(self.completed)
+
+class Answer(models.Model):
+    id = models.AutoField(primary_key=True)
+    result = models.ForeignKey(SurveyResult)
+    question = models.ForeignKey(Question)
+    answer = models.ForeignKey(Choice)
+    def __str__(self):
+        return self.question.question_text
 
 class Chemical(models.Model):
     name = models.CharField(max_length=200)
@@ -32,16 +49,16 @@ class PrimaryFlavor(models.Model):
         return self.name
 
 class SecondaryFlavor(models.Model):
-    parent_flavor = models.ForeignKey(PrimaryFlavor, on_delete=models.CASCADE)
-    chemical_compound = models.ForeignKey(Chemical, on_delete=models.CASCADE, blank=True, null=True)
+    parent_flavor = models.ForeignKey(PrimaryFlavor)
+    chemical_compound = models.ForeignKey(Chemical, blank=True, null=True)
     name = models.CharField(max_length=200)
     id = models.AutoField(primary_key=True)
     def __str__(self):
         return self.name
 
 class TertiaryFlavor(models.Model):
-    parent_flavor = models.ForeignKey(SecondaryFlavor, on_delete=models.CASCADE)
-    chemical_compound = models.ForeignKey(Chemical, on_delete=models.CASCADE)
+    parent_flavor = models.ForeignKey(SecondaryFlavor)
+    chemical_compound = models.ForeignKey(Chemical)
     name = models.CharField(max_length=200)
     id = models.AutoField(primary_key=True)
     def __str__(self):
