@@ -7,7 +7,7 @@ import datetime
 import os
 import json
 
-from .models import Question, Choice, Coffee, SurveyResult, Answer
+from .models import Question, Choice, Coffee, SurveyResult, Answer, BrewMethod, Brew
 from .forms import NameForm
 
 def index(request):
@@ -42,6 +42,9 @@ def logout_view(request):
     return HttpResponseRedirect(reverse('index'))
 
 def survey(request):
+    # make sure that someone is logged in
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('login'))
     question_list = Question.objects.order_by('-pub_date')
     context = {
             'question_list': question_list,
@@ -62,10 +65,46 @@ def submit(request):
         print question.question_text, " : ", ans
     return HttpResponseRedirect(reverse('recommend'))
 
-def taste(request):
-    return HttpResponse("This is where the coffee tasting will happen.")
+class TasteView(View):
+    def get(self, request, *args, **kwargs):
+        # make sure that someone is logged in
+        if not request.user.is_authenticated():
+            return HttpResponseRedirect(reverse('login'))
+        # this is the START of a tasting
+        # user will choose a coffee and enter brew information
+        context = {
+            "coffees": Coffee.objects.all(),
+            "brew_methods": BrewMethod.objects.all()
+        }
+        return render(request, 'coffee/taste.html', context)
+    def post(self, request, *args, **kwargs):
+        # make sure that someone is logged in
+        if not request.user.is_authenticated():
+            return HttpResponseRedirect(reverse('login'))
+        # validate brew data
+        # make a new brew object and save it to the DB
+        print request.user, request.POST['coffee']
+        ratio = round(float(request.POST['grams_water']) / float(request.POST['grams_coffee']), 2)
+        print ratio
+        brew = Brew(user=request.user,\
+                    method=BrewMethod.objects.get(name=request.POST['brewmethod']),\
+                    coffee=Coffee.objects.get(name=request.POST['coffee']),\
+                    grams_coffee=request.POST['grams_coffee'],\
+                    grams_water=request.POST['grams_water'],\
+                    water_temp=request.POST['water_temp'],\
+                    grind=request.POST['grind_setting'],\
+                    duration=request.POST['brew_time'])
+
+        context = {
+            "brew":brew,
+            "ratio":ratio
+        }
+        return render(request, 'coffee/taste2.html', context)
 
 def recommend(request):
+    # make sure that someone is logged in
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('login'))
     all_surveys = SurveyResult.objects.filter(user=request.user).order_by('-completed')
     if (len(all_surveys) > 0):
         survey = all_surveys[0]
@@ -83,6 +122,7 @@ def recommend(request):
         return render(request, 'coffee/no_surveys.html')
 
 def coffees(request):
+    # its ok to not be logged in here
     coffee_list = Coffee.objects.all()
     context = {'coffee_list': coffee_list}
     return render(request, 'coffee/coffees.html', context)

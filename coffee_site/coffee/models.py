@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.conf import settings
+from django.contrib.auth.models import User
+import datetime
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
@@ -85,3 +87,35 @@ class Coffee(models.Model):
     test_date = models.DateField()
     def __str__(self):
         return self.name
+
+class BrewMethod(models.Model):
+    name = models.CharField(max_length=100)
+    def __str__(self):
+        return self.name
+
+class Brew(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User)
+    method = models.ForeignKey(BrewMethod)
+    coffee = models.ForeignKey(Coffee)
+    date = models.DateTimeField(default=datetime.datetime.now)
+    grams_coffee = models.IntegerField()
+    grams_water = models.IntegerField()
+    water_temp = models.IntegerField(blank=True, null=True)
+    grind = models.CharField(max_length=200, blank=True, null=True)
+    duration = models.IntegerField('seconds', blank=True, null=True)
+    # just add all the tasting info here. brew--tasting will always be 1-10
+    initial_score = models.IntegerField()
+    def __str__(self):
+        return self.method.name + " " + str(self.date)
+
+class Tasting(models.Model):
+    id = models.AutoField(primary_key=True)
+    initial_score = models.IntegerField()
+    # aroma
+    # body
+    # flavor
+    # acidity
+    # sweetness
+    # aftertaste
+    # many of these can be 1-10 scale, with some other notes/characteristics

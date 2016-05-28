@@ -1,0 +1,79 @@
+{% extends "coffee/base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+<style>
+   form {
+      padding-left: 40px;
+   }
+
+   input {
+
+   }
+</style>
+
+ <!-- Page header -->
+ <div class="page-header">
+    <h1>Start a tasting<small> Enter the coffee and brew information</small></h1>
+ </div>
+
+ <!-- Coffee Info Section -->
+ <form action="{% url 'taste' %}" method="post">
+   {% csrf_token %}
+
+   <label for="coffee">Coffee:</label>
+   <select class="form-control" id="coffee" title="Select a coffee" name="coffee" required>
+      <option disabled selected>Select a coffee</option>
+      {% for c in coffees %}
+         <option>{{ c.name }}</option>
+      {% endfor %}
+   </select>
+   <br/>
+
+   <label for="brewmethod">Brew Method:</label>
+   <select class="form-control" id="brewmethod" name="brewmethod" required>
+      <option disabled selected>Select a brew method</option>
+      {% for method in brew_methods %}
+         <option>{{ method.name }}</option>
+      {% endfor %}
+   </select>
+   <br/>
+
+   <label for="grams_coffee">Amount of coffee (grams): </label>
+   <input type="text" id="grams_coffee" name="grams_coffee" required>
+   <br/><br/>
+
+   <label for="grams_water">Amount of water (grams): </label>
+   <input type="text" id="grams_water" name="grams_water" required>
+   <br/><br/>
+
+   <label for="water_temp">Water temperature (F): </label>
+   <input type="text" id="water_temp" name="water_temp" required>
+   <br/><br/>
+
+   <label for="water_temp">Grind setting: </label>
+   <input type="text" id="grind_setting" name="grind_setting">
+   <br/><br/>
+
+   <label for="water_temp">Brew time (seconds): </label>
+   <input type="text" id="brew_time" name="brew_time">
+   <br/><br/>
+   <div style="text-align:center;">
+      <input class="btn btn-primary btn-lg" type="submit" value="Taste!"/>
+   </div>
+</form>
+
+{% endblock %}
+
+<!--
+id = models.AutoField(primary_key=True)
+user = models.ForeignKey(User)
+method = models.ForeignKey(BrewMethod)
+coffee = models.ForeignKey(Coffee)
+date = models.DateTimeField(default=datetime.datetime.now)
+grams_coffee = models.IntegerField()
+grams_water = models.IntegerField()
+water_temp = models.IntegerField(blank=True, null=True)
+grind = models.CharField(max_length=200, blank=True, null=True)
+duration = models.IntegerField('seconds', blank=True, null=True)
+-->

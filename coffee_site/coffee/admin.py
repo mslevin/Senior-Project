@@ -1,5 +1,9 @@
 from django.contrib import admin
-from .models import Choice, Question, PrimaryFlavor, SecondaryFlavor, TertiaryFlavor, Chemical, Roaster, Coffee, SurveyResult, Answer
+from .models import Choice, Question
+from .models import PrimaryFlavor, SecondaryFlavor, TertiaryFlavor, Chemical
+from .models import Roaster, Coffee
+from .models import SurveyResult, Answer
+from .models import BrewMethod, Brew
 
 class ChoiceInline(admin.TabularInline):
     model = Choice
@@ -28,6 +32,9 @@ class RoasterAdmin(admin.ModelAdmin):
 class CoffeeAdmin(admin.ModelAdmin):
     list_display = ('name', 'roaster', 'origin')
 
+class BrewAdmin(admin.ModelAdmin):
+    list_display = ('user', 'method', 'date')
+
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Chemical)
 admin.site.register(PrimaryFlavor)
@@ -36,3 +43,5 @@ admin.site.register(TertiaryFlavor)
 admin.site.register(Roaster, RoasterAdmin)
 admin.site.register(Coffee, CoffeeAdmin)
 admin.site.register(SurveyResult, SurveyResultAdmin)
+admin.site.register(BrewMethod)
+admin.site.register(Brew, BrewAdmin)

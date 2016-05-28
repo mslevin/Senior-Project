@@ -1,32 +1,17 @@
-function wheel(modifiers) {
+   var tastesString = ""
 
-   var lookup = {}
-   mod_list = modifiers.split(",")
-   mod_list.forEach(function(item) {
-      var name = item.substring(1)
-      console.log(name + "----" + typeof(lookup[name]))
-      if (typeof(lookup[name]) === "undefined") {
-         lookup[name] = 0.1
-         console.log("--------" + typeof(lookup[name]))
-      }
-      if (item.substring(0,1) === "+") {
-         lookup[name] = lookup[name] + 0.9
-      }
-      else if (item.substring(0,1) === "-") {
-         //lookup[name] = lookup[name] - 0.1
-      }
-      //console.log(lookup[name])
-   })
+
+
 
    var width = 1260,
        height = 800,
        radius = Math.min(width, height) / 3,
        color = d3.scale.category20c();
 
-   var svg = d3.select("body").append("svg")
+   var svg = d3.select(".tastingwheel").append("svg")
              .attr("width", width)
              .attr("height", height)
-             //.on('load', modify(modifiers))
+             .on('load', function() {console.log("yas")})
              .append("g")
                 .attr("transform", "translate(" + width / 2 + "," + height * .50 + ")");
 
@@ -77,21 +62,28 @@ function wheel(modifiers) {
             .attr("display", function(d) { return d.depth ? null : "none"; })
             //.attr("display", function(d) { return null; })
             .attr("d", arc)
+            .attr("class", "inactive")
             .attr("stroke", "#fff")
             .style("fill", function(d) {
              if (d.color) return d3.rgb("#" + d.color)
              return color((d.children ? d : d.parent).name); })
             .style("fill-rule", "evenodd")
-            .style("opacity", 0.0)
-            .style("opacity", function(d) {
-               if (typeof(lookup[d.name]) !== "undefined") {
-                  console.log(lookup[d.name])
-                  return lookup[d.name]
-               }
-               return 0.2
-            })
             .style("stroke", "black")
-            .style("stroke-opacity", 1);
+            .on("mouseenter", function(d) {
+               d3.select(this).classed({'active':true, 'inactive':false})
+            })
+            .on("mouseleave", function(d) {
+               d3.select(this).classed({'active':false, 'inactive':true})
+            })
+            .on("click", function(d) {
+               var elem = d3.select(this)
+               elem.classed({'stayactive': !elem.classed('stayactive')})
+               tastesString = tastesString + d.name
+               // other stuff needs to happen here to save the info!
+               /// SAVE the stuff when the thing is submitted
+               // because it'll be hard to account for deselecting things
+               // when the page is submitted just select everything with .stayactive
+            })
 
          path.append("text")
             .text(function(d) { return d.name})
@@ -117,30 +109,4 @@ function wheel(modifiers) {
    // This is why "text-anchor", "middle" is important, otherwise, this "flip" would
    // a little harder.
    return (thetaDeg > 90) ? thetaDeg - 180 : thetaDeg;
-   }
-
-   d3.select(self.frameElement).style("height", height + 50 + "px");
-   d3.select("path")
-   console.log("Done")
-}
-
-function modify(modifiers) {
-   var lookup = {}
-   mod_list = modifiers.split(",")
-   mod_list.forEach(function(item) {
-      //console.log(item.substring(1))
-      lookup[item.substring(1)] = item.substring(0,1)
-   })
-
-}
-
-   function printStuff(d) {
-      d3.select("path").style("fill", "none")
-      var list = d.split(",")
-      list.forEach(function(mod) {
-         if (mod.substring(0,1) == "+") {
-            var str = console.log(mod.substring(1))
-            document.getElementById(str).style.opacity = "0.1"
-         }
-      })
    }
