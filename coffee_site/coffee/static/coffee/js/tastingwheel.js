@@ -1,4 +1,4 @@
-function wheel(modifiers) {
+function wheel(div, modifiers) {
 
    var lookup = {}
    mod_list = modifiers.split(",")
@@ -17,13 +17,14 @@ function wheel(modifiers) {
       }
       //console.log(lookup[name])
    })
+   console.log(mod_list)
 
-   var width = 1260,
+   var width = 860,
        height = 800,
        radius = Math.min(width, height) / 3,
        color = d3.scale.category20c();
 
-   var svg = d3.select("body").append("svg")
+   var svg = d3.select(div).append("svg")
              .attr("width", width)
              .attr("height", height)
              //.on('load', modify(modifiers))
@@ -65,7 +66,7 @@ function wheel(modifiers) {
          return 0;
         });
 
-   d3.json("../../media/data.json", function(error, root) {
+   d3.json("/media/data.json", function(error, root) {
    if (error) throw error;
 
    var path = svg.datum(root).selectAll("path")
@@ -73,25 +74,34 @@ function wheel(modifiers) {
          .enter().append("g")
 
    path.append("path")
-            .attr("id", function(d) { return d.name })
+            .attr("id", function(d) { return d.name.replace("/", "-") })
             .attr("display", function(d) { return d.depth ? null : "none"; })
             //.attr("display", function(d) { return null; })
             .attr("d", arc)
-            .attr("stroke", "#fff")
+            .attr("stroke", "black")
+            .attr("stroke-opacity", 1)
             .style("fill", function(d) {
              if (d.color) return d3.rgb("#" + d.color)
              return color((d.children ? d : d.parent).name); })
-            .style("fill-rule", "evenodd")
-            .style("opacity", 0.0)
+            //.style("fill-rule", "evenodd")
+            .style("opacity", 0.1)
             .style("opacity", function(d) {
-               if (typeof(lookup[d.name]) !== "undefined") {
+               if (d.name.length > 0 && typeof(lookup[d.name]) !== "undefined") {
                   console.log(lookup[d.name])
+                  console.log(d.name)
+                  //d.parent.style("opacity", lookup[d.name])
+                  //console.log(d.name + " " + d.parent.name)
+                  if(d.parent.name !== "undefined" && d.parent.name.length > 0) {
+                     //console.log("#" + d.parent.name)
+                     //console.log(d.parent.name.length)
+                     d3.select("#" + d.parent.name.replace("/", "-")).style("opacity", lookup[d.name])
+                  }
                   return lookup[d.name]
                }
-               return 0.2
+               return 0.1
             })
-            .style("stroke", "black")
-            .style("stroke-opacity", 1);
+            //.style("stroke", "black")
+            //.style("stroke-opacity", 1);
 
          path.append("text")
             .text(function(d) { return d.name})
@@ -121,7 +131,7 @@ function wheel(modifiers) {
 
    d3.select(self.frameElement).style("height", height + 50 + "px");
    d3.select("path")
-   console.log("Done")
+   //console.log("Done")
 }
 
 function modify(modifiers) {
@@ -133,14 +143,3 @@ function modify(modifiers) {
    })
 
 }
-
-   function printStuff(d) {
-      d3.select("path").style("fill", "none")
-      var list = d.split(",")
-      list.forEach(function(mod) {
-         if (mod.substring(0,1) == "+") {
-            var str = console.log(mod.substring(1))
-            document.getElementById(str).style.opacity = "0.1"
-         }
-      })
-   }

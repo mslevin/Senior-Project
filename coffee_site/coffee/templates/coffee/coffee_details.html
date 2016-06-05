@@ -1,0 +1,84 @@
+{% extends "coffee/base.html" %}
+{% load staticfiles %}
+
+
+{% block content %}
+
+<!-- Page header -->
+<div class="page-header">
+   <h1>{{ coffee.name }}    <small>{{ coffee.roaster.name }}</small></h1>
+</div>
+
+<div class="row">
+   <div class="col-md-5">
+      <table class="table table-striped"> <!-- Coffee information table -->
+         <caption>Coffee information</caption>
+         <tbody>
+            <tr>
+               <th scope="row">Roaster</th>
+               <td>{{ coffee.roaster }}</td>
+            </tr>
+            <tr>
+               <th scope="row">Origin</th>
+               <td>{{ coffee.origin }}</td>
+            </tr>
+            <tr>
+               <th scope="row">Name</th>
+               <td>{{ coffee.name }}</td>
+            </tr>
+            <tr>
+               <th scope="row">Region</th>
+               <td>{{ coffee.region }}</td>
+            </tr>
+            <tr>
+               <th scope="row">Varietal</th>
+               <td>{{ coffee.varietal }}</td>
+            </tr>
+            <tr>
+               <th scope="row">Process</th>
+               <td>{{ coffee.process }}</td>
+            </tr>
+            <tr>
+               <th scope="row">Tasting Notes</th>
+               <td>{{ coffee.tasting_notes }}</td>
+            </tr>
+         </tbody>
+      </table>
+      <table class="table table-striped">
+         <caption>GCMS Information</caption>
+         <thead>
+            <th>Compound</th>
+            <th>Primary Sensory (Odor)</th>
+            <th>Secondary Sensory (Flavor)</th>
+         </thead>
+         <tbody>
+            {% for chem in chemicals %}
+               <tr>
+                  <th>{{ chem.name }}</th>
+                  <td>{{ chem.primary_sensory }}</td>
+                  <td>{{ chem.secondary_sensory }}</td>
+
+               </tr>
+            {% endfor %}
+         </tbody>
+      </table>
+   </div>
+   <div class="col-md-7">
+      <div class="wheel">
+      </div>
+      <p>This chart shows what flavor and odor characteristics were found to be present
+         in the sample.
+      </p>
+
+   </div>
+
+</div>
+
+<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="{% static 'coffee/js/tastingwheel.js' %}" type="text/javascript"></script>
+<script type="text/javascript">
+wheel(".wheel", "{{ descriptors }}")
+
+</script>
+
+{% endblock %}

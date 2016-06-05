@@ -77,13 +77,13 @@
     {% csrf_token %}
     {% if coffee_list %}
     {% for coffee in coffee_list %}
-     <div class="item col-xs-4 col-lg-4">
+     <div class="item col-xs-4 col-lg-4" style="text-align: center;">
          <div class="thumbnail">
              <img class="group list-group-image" src="{{ coffee.roaster.image.url }}" alt="" width="220" height="120"/>
              <div class="caption">
                  <h4 class="group inner list-group-item-heading">{{ coffee.name }}</h4>
                  <br />
-                 <p>
+                 <p style="text-align: left;">
                     <i>Origin:</i> {{ coffee.origin }}<br />
                     {% if coffee.region %}
                     <i>Region:</i> {{ coffee.region }}<br />
@@ -97,11 +97,13 @@
                     {% if coffee.tasting_notes %}
                     <i>Tasting Notes:</i> {{ coffee.tasting_notes }}<br />
                     {% endif %}
-                 <div class="row">
+                 </p>
+                 <!-- <div class="row" style="text-align: center;">
                      <div class="col-xs-12 col-md-6">
-                         <a class="btn btn-success" href="{{ coffee.roaster.website }}">View Website</a>
                      </div>
-                 </div>
+                 </div> -->
+                 <a class="btn btn-success" href="{% url 'coffee_details' coffee.id %}">View Details</a>
+
              </div>
          </div>
      </div>

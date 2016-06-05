@@ -4,6 +4,7 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
 import datetime
+from django.utils import timezone
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
@@ -31,40 +32,12 @@ class SurveyResult(models.Model):
 class Answer(models.Model):
     id = models.AutoField(primary_key=True)
     result = models.ForeignKey(SurveyResult)
-    question = models.ForeignKey(Question)
+    question = models.ForeignKey(Question, blank=True, null=True)
     answer = models.ForeignKey(Choice)
     def __str__(self):
         return self.question.question_text
 
-class Chemical(models.Model):
-    name = models.CharField(max_length=200)
-    id = models.AutoField(primary_key=True)
-    detectable_ppm = models.IntegerField()
-    detectable_substance = models.CharField(max_length=200)
-    def __str__(self):
-        return self.name
 
-class PrimaryFlavor(models.Model):
-    name = models.CharField(max_length=200)
-    id = models.AutoField(primary_key=True)
-    def __str__(self):
-        return self.name
-
-class SecondaryFlavor(models.Model):
-    parent_flavor = models.ForeignKey(PrimaryFlavor)
-    chemical_compound = models.ForeignKey(Chemical, blank=True, null=True)
-    name = models.CharField(max_length=200)
-    id = models.AutoField(primary_key=True)
-    def __str__(self):
-        return self.name
-
-class TertiaryFlavor(models.Model):
-    parent_flavor = models.ForeignKey(SecondaryFlavor)
-    chemical_compound = models.ForeignKey(Chemical)
-    name = models.CharField(max_length=200)
-    id = models.AutoField(primary_key=True)
-    def __str__(self):
-        return self.name
 
 class Roaster(models.Model):
     name = models.CharField(max_length=100)
@@ -82,9 +55,27 @@ class Coffee(models.Model):
     varietal = models.CharField(max_length=100, blank=True, null=True)
     process = models.CharField(max_length=100, blank=True, null=True)
     tasting_notes = models.CharField(max_length=500, blank=True, null=True)
+    descriptors = models.CharField(max_length=500, blank=True, null=True)
     roast_date = models.DateField()
     brew_date = models.DateField()
     test_date = models.DateField()
+    def __str__(self):
+        return self.name
+
+class GCMSResult(models.Model):
+    coffee = models.ForeignKey(Coffee)
+    def __str__(self):
+        return self.coffee.name
+
+class Chemical(models.Model):
+    result = models.ForeignKey(GCMSResult, null=True)
+    name = models.CharField(max_length=200)
+    id = models.AutoField(primary_key=True)
+    #detectable_ppm = models.IntegerField()
+    #detectable_substance = models.CharField(max_length=200)
+    primary_sensory = models.CharField(max_length=500, default="", blank=True, null=True)
+    secondary_sensory = models.CharField(max_length=500, default="", blank=True, null=True)
+    descriptors = models.CharField(max_length=200, default="", null=True, blank=True)
     def __str__(self):
         return self.name
 
@@ -98,14 +89,19 @@ class Brew(models.Model):
     user = models.ForeignKey(User)
     method = models.ForeignKey(BrewMethod)
     coffee = models.ForeignKey(Coffee)
-    date = models.DateTimeField(default=datetime.datetime.now)
+    date = models.DateTimeField(default=timezone.now)
     grams_coffee = models.IntegerField()
     grams_water = models.IntegerField()
     water_temp = models.IntegerField(blank=True, null=True)
     grind = models.CharField(max_length=200, blank=True, null=True)
     duration = models.IntegerField('seconds', blank=True, null=True)
     # just add all the tasting info here. brew--tasting will always be 1-10
-    initial_score = models.IntegerField()
+    strength = models.IntegerField(default=-1)
+    extraction = models.IntegerField(default=-1)
+    acidity = models.IntegerField(default=-1)
+    overall_score = models.IntegerField(default=-1)
+    aftertaste = models.IntegerField(default=-1)
+    body = models.IntegerField(default=-1)
     def __str__(self):
         return self.method.name + " " + str(self.date)
 
@@ -119,3 +115,10 @@ class Tasting(models.Model):
     # sweetness
     # aftertaste
     # many of these can be 1-10 scale, with some other notes/characteristics
+
+class UserData(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    recommendation = models.ForeignKey(Coffee, blank=True, null=True)
+    time = models.DateTimeField(default=timezone.now, null=True)
+    def __str__(self):
+        return self.user.username + " " + str(self.time)

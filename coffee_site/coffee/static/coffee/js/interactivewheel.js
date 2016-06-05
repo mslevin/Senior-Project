@@ -3,7 +3,7 @@
 
 
 
-   var width = 1260,
+   var width = 800,
        height = 800,
        radius = Math.min(width, height) / 3,
        color = d3.scale.category20c();
@@ -78,6 +78,10 @@
             .on("click", function(d) {
                var elem = d3.select(this)
                elem.classed({'stayactive': !elem.classed('stayactive')})
+
+               console.log(d.parent)
+               d3.selectAll("path").filter(function(f) { f.name === d.parent.name} ).classed({'stayactive': !elem.classed('stayactive')})
+
                tastesString = tastesString + d.name
                // other stuff needs to happen here to save the info!
                /// SAVE the stuff when the thing is submitted
