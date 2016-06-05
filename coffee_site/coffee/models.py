@@ -102,8 +102,11 @@ class Brew(models.Model):
     overall_score = models.IntegerField(default=-1)
     aftertaste = models.IntegerField(default=-1)
     body = models.IntegerField(default=-1)
+    descriptors = models.CharField(max_length=500, default="")
     def __str__(self):
         return self.method.name + " " + str(self.date)
+    def totalScore(self):
+        return self.strength + self.extraction + self.acidity + self.overall_score + self.aftertaste + self.body
 
 class Tasting(models.Model):
     id = models.AutoField(primary_key=True)

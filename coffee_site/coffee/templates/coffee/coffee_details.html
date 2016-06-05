@@ -64,11 +64,15 @@
       </table>
    </div>
    <div class="col-md-7">
+      {% if chemicals %}
       <div class="wheel">
       </div>
       <p>This chart shows what flavor and odor characteristics were found to be present
          in the sample.
       </p>
+      {% else %}
+         <h3>No testing data available</h3>
+      {% endif %}
 
    </div>
 

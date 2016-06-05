@@ -9,7 +9,7 @@ import datetime
 import os
 import json
 
-from .models import Question, Choice, Coffee, SurveyResult, Answer, BrewMethod, Brew, GCMSResult, Chemical, UserData
+from .models import Question, Choice, Coffee, SurveyResult, Answer, BrewMethod, Brew, GCMSResult, Chemical, UserData, Brew
 from .forms import NameForm
 
 def index(request):
@@ -72,45 +72,38 @@ class TasteView(View):
         # make sure that someone is logged in
         if not request.user.is_authenticated():
             return HttpResponseRedirect(reverse('login'))
-        # this is the START of a tasting
-        # user will choose a coffee and enter brew information
         recommendation = UserData.objects.get(user=request.user).recommendation
         context = {
             "recommendation": recommendation,
             "coffees": Coffee.objects.all(),
             "brew_methods": BrewMethod.objects.all()
         }
-        return render(request, 'coffee/taste.html', context)
+        return render(request, 'coffee/taste2.html', context)
     def post(self, request, *args, **kwargs):
         # make sure that someone is logged in
         if not request.user.is_authenticated():
             return HttpResponseRedirect(reverse('login'))
         # validate brew data
         # make a new brew object and save it to the DB
+        brew = Brew(user=request.user,\
+                    method=BrewMethod.objects.get(name=request.POST['brewmethod']),\
+                    coffee=Coffee.objects.get(name=(request.POST['coffee']).split(" - ")[0]),\
+                    grams_coffee=request.POST['grams_coffee'],\
+                    grams_water=request.POST['grams_water'],\
+                    water_temp=request.POST['water_temp'],\
+                    grind=request.POST['grind_setting'],\
+                    duration=request.POST['brew_time'],\
+                    descriptors=request.POST['descriptors'],\
+                    strength=int(float(request.POST['Strength']) * 10.0),\
+                    extraction=int(float(request.POST['Extraction']) * 10.0),\
+                    acidity=int(float(request.POST['Acidity']) * 10.0),\
+                    overall_score=int(float(request.POST['Overall Score']) * 10.0),\
+                    aftertaste=int(float(request.POST['Aftertaste']) * 10.0),\
+                    body=int(float(request.POST['Body']) * 10.0))
+        brew.save()
 
-        # check if the tasting is complete
-        if (request.POST.get("complete") != "true"):
-            ratio = round(float(request.POST['grams_water']) / float(request.POST['grams_coffee']), 2)
-            brew = Brew(user=request.user,\
-                        method=BrewMethod.objects.get(name=request.POST['brewmethod']),\
-                        coffee=Coffee.objects.get(name=(request.POST['coffee']).split(" - ")[0]),\
-                        grams_coffee=request.POST['grams_coffee'],\
-                        grams_water=request.POST['grams_water'],\
-                        water_temp=request.POST['water_temp'],\
-                        grind=request.POST['grind_setting'],\
-                        duration=request.POST['brew_time'])
+        return HttpResponseRedirect(reverse('profile'))
 
-            context = {
-                "brew":brew,
-                "ratio":ratio
-            }
-            return render(request, 'coffee/taste2.html', context)
-        else:
-            return HttpResponse("lol")
-
-
-def saveTasting(request):
-    print request.POST
 
 
 def recommend(request):
@@ -175,9 +168,12 @@ def coffees(request):
 
 def coffee_details(request, coffee_id):
     coffee = Coffee.objects.get(id=coffee_id)
-    descriptors = ["+" + str(d).encode("utf-8") for d in all_descriptors(GCMSResult.objects.get(coffee=coffee))]
-    #chemicals = []
-    chemicals = Chemical.objects.filter(result=GCMSResult.objects.get(coffee=coffee))
+    try:
+        descriptors = ["+" + str(d).encode("utf-8") for d in all_descriptors(GCMSResult.objects.get(coffee=coffee))]
+        chemicals = Chemical.objects.filter(result=GCMSResult.objects.get(coffee=coffee))
+    except GCMSResult.DoesNotExist:
+        chemicals = None
+        descriptors = ""
     #brews = Brew.objects.get(coffee=coffee)
     context = {
         "coffee": coffee,
@@ -186,6 +182,22 @@ def coffee_details(request, coffee_id):
         }
     print coffee.name
     return render(request, 'coffee/coffee_details.html', context)
+
+def profile(request):
+    print Brew.objects.all().filter(user=request.user)
+    try:
+        recent = UserData.objects.get(user=request.user).recommendation
+        descriptors = ["+" + str(d).encode("utf-8") for d in all_descriptors(GCMSResult.objects.get(coffee=recent))]
+    except UserData.DoesNotExist:
+        recent = None
+        descriptors = ""
+    context = {
+        "recent": recent,
+        "brews": Brew.objects.all().filter(user=request.user),
+        "descriptors": ",".join(descriptors)
+    }
+
+    return render(request, 'coffee/profile.html', context)
 
 
 ## Helper functions

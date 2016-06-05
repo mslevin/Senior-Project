@@ -72,7 +72,7 @@
                     </li>
                     {% if user.is_authenticated %}
                     <li>
-                       <a href="#">{{ user.username }}</a>
+                       <a href="{% url 'profile' %}">{{ user.username }}</a>
                     </li>
                     <li>
                        <a href="{% url 'logout' %}">Logout</a>
@@ -114,7 +114,7 @@
 
     {% block content %}{% endblock %}
 
-    
+
 
     <!-- jQuery -->
     <script src="{% static 'coffee/js/jquery.js' %}"></script>

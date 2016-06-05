@@ -1,0 +1,60 @@
+{% extends "coffee/base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+<div class="page-header">
+   <h1>{{ user.username }}<small></small></h1>
+</div>
+
+<div class="row">
+   <div class="col-md-6">
+      <h2>Your recent brews:</h2>
+      {% if brews|length == 0 %}
+         <h3>No brews recorded!</h3>
+         <a href="{% url 'taste' %}" class="btn btn-success btn-md" role="button">Start a tasting!</a>
+
+      {% else %}
+      <table class="table table-striped">
+         <tr>
+            <th>Coffee</th>
+            <th>Method</th>
+            <th>Time</th>
+            <th>Overall Score</th>
+            <th>       </th>
+         </tr>
+         {% for b in brews %}
+            <tr>
+               <th><a href="">{{ b.coffee.name }}</a></th>
+               <td>{{ b.method.name }}</td>
+               <td>{{ b.date }}</td>
+               <td>{{ b.totalScore }}</td>
+               <td><a href="" class="btn btn-default btn-sm"><span class="network-name">View</span></a></td>
+            </tr>
+         {% endfor %}
+      </table>
+      {% endif %}
+   </div>
+
+
+   <div class="col-md-6">
+      {% if recent %}
+         <h2>Your current recommendation: </h2>
+         <h3>{{ recent.name }}</h3>
+         <a href="{% url 'coffee_details' recent.id %}" class="btn btn-success btn-md" role="button">View Coffee Details</a>
+         <div class="tastingwheel"></div>
+      {% else %}
+         <h2>No survey results yet!</h2>
+         <a href="{% url 'survey' %}" class="btn btn-success btn-md" role="button">Take the survey!</a>
+
+      {% endif %}
+
+   </div>
+</div>
+
+<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="{% static 'coffee/js/tastingwheel.js' %}" type="text/javascript"></script>
+<script type="text/javascript">
+wheel(".tastingWheel", "{{ descriptors }}")
+</script>
+
+{% endblock %}

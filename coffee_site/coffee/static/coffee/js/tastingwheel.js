@@ -19,9 +19,9 @@ function wheel(div, modifiers) {
    })
    console.log(mod_list)
 
-   var width = 860,
+   var width = parseInt(d3.select(div).style('width'), 10),
        height = 800,
-       radius = Math.min(width, height) / 3,
+       radius = Math.min(width, height) / 2,
        color = d3.scale.category20c();
 
    var svg = d3.select(div).append("svg")
@@ -36,32 +36,32 @@ function wheel(div, modifiers) {
         .size([2 * Math.PI, radius * radius])
         .value(function(d) {return 1;});
 
+   var scale = Math.min(width, height) / 800;
+
    var arc = d3.svg.arc()
         .startAngle(function(d) { return d.x * 1.0002; })
         .endAngle(function(d) { return d.x + d.dx; })
-        // .innerRadius(function(d) { return Math.sqrt(d.y) / 1.5; })
-        // .outerRadius(function(d) { return Math.sqrt(d.y + d.dy); });
         .innerRadius(function(d) {
            if (d.depth === 1) {
-             return 62
+             return 62 * scale
           }
            else if (d.depth === 2) {
-             return 170
+             return 170 * scale
           }
            else if (d.depth === 3) {
-             return 290
+             return 290 * scale
             }
          return 0;
         })
         .outerRadius(function(d) {
            if (d.depth === 1) {
-            return 170
+            return 170 * scale
            }
           else if (d.depth === 2) {
-             return 290
+             return 290 * scale
           }
           else if (d.depth === 3) {
-             return 390
+             return 390 * scale
          }
          return 0;
         });

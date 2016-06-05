@@ -26,10 +26,10 @@ var RadarChart = {
 	 radians: 2 * Math.PI,
 	 opacityArea: 0.5,
 	 ToRight: 5,
-	 TranslateX: 200,
+	 TranslateX: 150,
 	 TranslateY: 30,
-	 ExtraWidthX: 100,
-	 ExtraWidthY: 100,
+	 ExtraWidthX: 00,
+	 ExtraWidthY: 00,
 	 color: d3.scale.category10()
 	};
 
@@ -249,6 +249,7 @@ function update(newD, cfg, total) {
 }
 
 function getData() {
+	console.log("we out here bruh")
    var descriptors = [];
    var elem = document.getElementsByClassName("stayActive");
    for (var i = 0; i < elem.length; i++) {
@@ -256,19 +257,33 @@ function getData() {
       console.log(elem[i].id)
    }
    console.log(descriptors);
-   console.log(d[0]);
+   console.log(d[0][0]);
+	attributes = []
 
-	var form = document.createElement("form");
-   form.setAttribute("method", "post");
-   form.setAttribute("action", "/coffee/taste/");
+	for (obj in d[0]) {
+		attributes.push({axis:obj.axis, value:obj.value})
+	}
+	console.log(attributes)
+
+	var form = document.getElementsByClassName("tastingData")[0];
+	console.log(form)
 
 	var hidden = document.createElement("input");
 	hidden.setAttribute("type", "hidden");
-	hidden.setAttribute("name", "csrfmiddlewaretoken")
-	hidden.setAttribute("value", "eL4wH38PfXSn6OzNKhg8oLuwLHJWbzqu")
+	hidden.setAttribute("name", "descriptors")
+	hidden.setAttribute("value", descriptors)
 	form.appendChild(hidden);
 
-	form.submit();
+	for (var i = 0; i < d[0].length; i++) {
+		hidden = document.createElement("input");
+		hidden.setAttribute("type", "hidden");
+		hidden.setAttribute("name", d[0][i].axis)
+		hidden.setAttribute("value", d[0][i].value)
+		form.appendChild(hidden);
+	}
 
 
+
+
+	return false;
 }

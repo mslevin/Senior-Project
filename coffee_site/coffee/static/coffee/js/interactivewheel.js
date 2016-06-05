@@ -1,9 +1,5 @@
-   var tastesString = ""
 
-
-
-
-   var width = 800,
+   var width = parseInt(d3.select(".tastingwheel").style('width'), 10),
        height = 800,
        radius = Math.min(width, height) / 3,
        color = d3.scale.category20c();
@@ -19,6 +15,9 @@
         .sort(null)
         .size([2 * Math.PI, radius * radius])
         .value(function(d) {return 1;});
+
+   var scale = Math.min(width, height) / 800;
+
 
    var arc = d3.svg.arc()
         .startAngle(function(d) { return d.x * 1.0002; })
